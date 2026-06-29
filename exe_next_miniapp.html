@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>EXE NEXT NUMBER</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js"></script>
+<style>
+  :root {
+    --bg: #f0f2f5;
+    --card: #ffffff;
+    --text: #0d1117;
+    --sub: #6b7280;
+    --accent: #00c896;
+    --accent2: #0077ff;
+    --danger: #ff4757;
+    --border: #e5e7eb;
+    --nav: #ffffff;
+    --input: #f3f4f6;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 16px;
+  }
+  [data-theme="dark"] {
+    --bg: #0d1117;
+    --card: #161b22;
+    --text: #e6edf3;
+    --sub: #8b949e;
+    --border: #30363d;
+    --nav: #161b22;
+    --input: #21262d;
+    --shadow: 0 2px 12px rgba(0,0,0,0.4);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:80px; transition: background 0.3s, color 0.3s; }
+
+  /* TOP BAR */
+  .topbar { position:sticky; top:0; z-index:100; background:var(--card); border-bottom:1px solid var(--border); padding:12px 16px; display:flex; align-items:center; justify-content:space-between; box-shadow:var(--shadow); }
+  .topbar-logo { display:flex; align-items:center; gap:10px; }
+  .topbar-logo img { width:34px; height:34px; border-radius:50%; object-fit:cover; }
+  .topbar-name { font-size:15px; font-weight:700; letter-spacing:0.3px; }
+  .topbar-name span { color:var(--accent); }
+  .topbar-right { display:flex; align-items:center; gap:10px; }
+  .balance-pill { background:linear-gradient(135deg,var(--accent),var(--accent2)); color:#fff; padding:5px 12px; border-radius:20px; font-size:13px; font-weight:700; }
+  .theme-btn { background:var(--input); border:none; border-radius:50%; width:34px; height:34px; cursor:pointer; font-size:16px; display:flex; align-items:center; justify-content:center; }
+
+  /* BOTTOM NAV */
+  .bottom-nav { position:fixed; bottom:0; left:0; right:0; z-index:100; background:var(--nav); border-top:1px solid var(--border); display:flex; padding:8px 0 max(8px, env(safe-area-inset-bottom)); }
+  .nav-item { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; padding:4px; border:none; background:none; color:var(--sub); font-size:10px; font-weight:500; transition:color 0.2s; }
+  .nav-item.active { color:var(--accent); }
+  .nav-item svg { width:22px; height:22px; }
+
+  /* PAGES */
+  .page { display:none; padding:16px; animation: fadeIn 0.2s ease; }
+  .page.active { display:block; }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+
+  /* CARDS */
+  .card { background:var(--card); border-radius:var(--radius); padding:16px; box-shadow:var(--shadow); margin-bottom:12px; border:1px solid var(--border); }
+  .card-title { font-size:12px; font-weight:600; color:var(--sub); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
+
+  /* HOME */
+  .hero-card { background:linear-gradient(135deg,#0077ff,#00c896); color:#fff; border-radius:var(--radius); padding:20px; margin-bottom:12px; box-shadow:0 4px 20px rgba(0,199,150,0.3); }
+  .hero-label { font-size:11px; opacity:0.8; text-transform:uppercase; letter-spacing:1px; margin-bottom:4px; }
+  .hero-amount { font-size:36px; font-weight:800; letter-spacing:-1px; }
+  .hero-sub { font-size:12px; opacity:0.75; margin-top:4px; }
+  .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+  .stat-card { background:var(--card); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); border:1px solid var(--border); text-align:center; }
+  .stat-val { font-size:22px; font-weight:800; color:var(--accent); }
+  .stat-lbl { font-size:11px; color:var(--sub); margin-top:2px; }
+
+  /* REFER */
+  .refer-card { background:linear-gradient(135deg,#1a1a2e,#16213e); color:#fff; border-radius:var(--radius); padding:18px; margin-bottom:12px; }
+  .refer-title { font-size:16px; font-weight:700; margin-bottom:4px; }
+  .refer-sub { font-size:12px; opacity:0.7; margin-bottom:14px; }
+  .refer-link-box { background:rgba(255,255,255,0.1); border-radius:10px; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+  .refer-link-text { font-size:12px; opacity:0.9; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .copy-btn { background:var(--accent); color:#fff; border:none; border-radius:8px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; }
+  .refer-stats { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .refer-stat { background:rgba(255,255,255,0.08); border-radius:10px; padding:12px; text-align:center; }
+  .refer-stat-val { font-size:20px; font-weight:800; }
+  .refer-stat-lbl { font-size:11px; opacity:0.6; margin-top:2px; }
+
+  /* NUMBER PAGE */
+  .input-group { margin-bottom:12px; }
+  .input-label { font-size:12px; font-weight:600; color:var(--sub); margin-bottom:6px; display:block; text-transform:uppercase; letter-spacing:0.5px; }
+  .input-field { width:100%; background:var(--input); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; font-size:14px; color:var(--text); outline:none; transition:border 0.2s; }
+  .input-field:focus { border-color:var(--accent); }
+  .btn { width:100%; padding:14px; border:none; border-radius:12px; font-size:15px; font-weight:700; cursor:pointer; transition:all 0.2s; letter-spacing:0.3px; }
+  .btn-primary { background:linear-gradient(135deg,var(--accent2),var(--accent)); color:#fff; box-shadow:0 4px 14px rgba(0,199,150,0.3); }
+  .btn-primary:active { transform:scale(0.98); }
+  .btn-danger { background:var(--danger); color:#fff; }
+  .btn-outline { background:transparent; border:1.5px solid var(--accent); color:var(--accent); }
+
+  .activity-tabs { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; padding-bottom:4px; }
+  .tab { padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; border:1.5px solid var(--border); background:var(--input); color:var(--sub); transition:all 0.2s; }
+  .tab.active { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  .otp-item { background:var(--card); border-radius:12px; padding:12px 14px; margin-bottom:8px; border-left:3px solid var(--accent); box-shadow:var(--shadow); border:1px solid var(--border); border-left-width:3px; }
+  .otp-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+  .otp-service { font-size:12px; font-weight:700; color:var(--accent2); }
+  .otp-time { font-size:11px; color:var(--sub); }
+  .otp-number { font-size:13px; color:var(--sub); margin-bottom:4px; }
+  .otp-code { font-size:20px; font-weight:800; letter-spacing:2px; color:var(--text); }
+  .otp-msg { font-size:11px; color:var(--sub); margin-top:4px; font-family:monospace; }
+  .otp-actions { display:flex; gap:6px; margin-top:8px; }
+  .otp-btn { padding:5px 12px; border-radius:8px; font-size:11px; font-weight:700; border:none; cursor:pointer; }
+  .otp-btn-copy { background:var(--accent); color:#fff; }
+  .otp-btn-use { background:var(--accent2); color:#fff; }
+
+  /* CONSOLE */
+  .console-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .live-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); animation:pulse 1.5s infinite; display:inline-block; margin-right:6px; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .console-search { display:flex; gap:8px; margin-bottom:12px; }
+  .search-input { flex:1; background:var(--input); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; font-size:13px; color:var(--text); outline:none; }
+  .search-input:focus { border-color:var(--accent); }
+  .refresh-btn { background:var(--input); border:1.5px solid var(--border); border-radius:10px; padding:10px 14px; cursor:pointer; color:var(--text); font-size:16px; }
+
+  /* WALLET */
+  .method-select { width:100%; background:var(--input); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; font-size:14px; color:var(--text); outline:none; appearance:none; cursor:pointer; }
+  .amount-row { display:flex; gap:8px; align-items:flex-end; }
+  .amount-row .input-group { flex:1; margin-bottom:0; }
+  .use-max-btn { background:var(--input); border:1.5px solid var(--border); border-radius:10px; padding:12px 14px; font-size:12px; font-weight:700; color:var(--accent); cursor:pointer; white-space:nowrap; }
+  .withdraw-history-item { display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--card); border-radius:10px; border:1px solid var(--border); margin-bottom:8px; }
+  .wh-left { display:flex; flex-direction:column; gap:2px; }
+  .wh-method { font-size:13px; font-weight:700; }
+  .wh-date { font-size:11px; color:var(--sub); }
+  .wh-right { display:flex; flex-direction:column; align-items:flex-end; gap:2px; }
+  .wh-amount { font-size:15px; font-weight:800; }
+  .wh-status { font-size:11px; padding:2px 8px; border-radius:10px; }
+  .status-pending { background:#fef3c7; color:#d97706; }
+  .status-approved { background:#d1fae5; color:#059669; }
+  .status-rejected { background:#fee2e2; color:#dc2626; }
+
+  /* PROFILE */
+  .profile-avatar { width:80px; height:80px; border-radius:50%; background:linear-gradient(135deg,var(--accent2),var(--accent)); display:flex; align-items:center; justify-content:center; font-size:32px; font-weight:800; color:#fff; margin:0 auto 12px; }
+  .profile-name { text-align:center; font-size:20px; font-weight:800; margin-bottom:4px; }
+  .profile-username { text-align:center; font-size:13px; color:var(--sub); margin-bottom:16px; }
+  .profile-uid { background:var(--input); border-radius:8px; padding:8px 14px; text-align:center; font-size:12px; color:var(--sub); font-family:monospace; margin-bottom:16px; }
+  .profile-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .profile-stat { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:14px; text-align:center; }
+  .profile-stat-val { font-size:20px; font-weight:800; color:var(--accent); }
+  .profile-stat-lbl { font-size:11px; color:var(--sub); margin-top:2px; }
+
+  /* TOAST */
+  .toast { position:fixed; bottom:90px; left:50%; transform:translateX(-50%) translateY(20px); background:#1a1a2e; color:#fff; padding:10px 20px; border-radius:20px; font-size:13px; font-weight:600; opacity:0; transition:all 0.3s; z-index:999; white-space:nowrap; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+  /* LOADING */
+  .loading { display:flex; align-items:center; justify-content:center; padding:30px; }
+  .spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+  @keyframes spin { to{transform:rotate(360deg)} }
+
+  .empty-state { text-align:center; padding:30px; color:var(--sub); font-size:13px; }
+  .section-title { font-size:17px; font-weight:800; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+
+  /* PREMIUM BANNER */
+  .premium-banner { background:linear-gradient(135deg,#1a1a2e,#16213e,#0f3460); border-radius:var(--radius); padding:16px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; cursor:pointer; }
+  .premium-banner-left { display:flex; align-items:center; gap:12px; }
+  .premium-icon { width:40px; height:40px; background:rgba(255,255,255,0.1); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:20px; }
+  .premium-text { color:#fff; }
+  .premium-text-title { font-size:14px; font-weight:700; }
+  .premium-text-sub { font-size:11px; opacity:0.6; }
+  .premium-badge { background:var(--accent); color:#fff; font-size:10px; font-weight:700; padding:3px 8px; border-radius:10px; }
+
+  .find-range-card { background:var(--card); border-radius:var(--radius); padding:16px; margin-bottom:12px; border:1px solid var(--border); }
+  .find-row { display:flex; gap:8px; }
+  .find-row .input-field { flex:1; }
+  .find-btn { background:var(--accent); color:#fff; border:none; border-radius:10px; padding:12px 18px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+
+  .number-activity-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .clear-btn { background:none; border:1px solid var(--danger); color:var(--danger); border-radius:8px; padding:5px 12px; font-size:12px; font-weight:600; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0077ff,#00c896);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;color:#fff;">EXE</div>
+    <div class="topbar-name">EXE NEXT <span>NUMBER</span></div>
+  </div>
+  <div class="topbar-right">
+    <div class="balance-pill">৳<span id="topBalanceVal">0.00</span></div>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+  </div>
+</div>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="hero-card">
+    <div class="hero-label">Wallet Balance</div>
+    <div class="hero-amount">৳<span id="homeBalance">0.00</span></div>
+    <div class="hero-sub">EXE NEXT NUMBER BOT</div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val" id="totalOtps">0</div>
+      <div class="stat-lbl">Total OTPs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="todayOtps">0</div>
+      <div class="stat-lbl">Today OTPs</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="totalRefers">0</div>
+      <div class="stat-lbl">Total Refers</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val" id="totalEarned">0</div>
+      <div class="stat-lbl">Total Earned ৳</div>
+    </div>
+  </div>
+
+  <div class="premium-banner" onclick="showToast('Premium coming soon!')">
+    <div class="premium-banner-left">
+      <div class="premium-icon">💎</div>
+      <div class="premium-text">
+        <div class="premium-text-title">Buy Premium Access</div>
+        <div class="premium-text-sub">HIGH-SPEED SERVERS</div>
+      </div>
+    </div>
+    <div class="premium-badge">NEW</div>
+  </div>
+
+  <div class="refer-card">
+    <div class="refer-title">✨ Refer &amp; Earn Lifetime</div>
+    <div class="refer-sub">Get commission for EVERY OTP your friend completes.</div>
+    <div class="refer-link-box">
+      <div class="refer-link-text" id="referLink">Loading...</div>
+      <button class="copy-btn" onclick="copyRefer()">Copy</button>
+    </div>
+    <div class="refer-stats">
+      <div class="refer-stat">
+        <div class="refer-stat-val" id="friendsJoined">0</div>
+        <div class="refer-stat-lbl">Friends Joined</div>
+      </div>
+      <div class="refer-stat">
+        <div class="refer-stat-val">৳<span id="totalCommission">0.00</span></div>
+        <div class="refer-stat-lbl">Total Commission</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NUMBER -->
+<div class="page" id="page-number">
+  <div class="section-title">📱 Get Number</div>
+
+  <div class="find-range-card">
+    <div class="card-title">Find Best Range</div>
+    <div class="find-row">
+      <input class="input-field" id="findServiceInput" placeholder="e.g. Instagram, WhatsApp">
+      <button class="find-btn" onclick="findRange()">FIND</button>
+    </div>
+    <div id="findRangeResult" style="margin-top:10px;font-size:13px;color:var(--sub);"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Target Range</div>
+    <div class="input-group">
+      <input class="input-field" id="rangeInput" placeholder="# e.g. 2290195">
+    </div>
+    <button class="btn btn-primary" onclick="allocateNumber()">ALLOCATE NUMBER</button>
+  </div>
+
+  <div class="card" style="cursor:pointer;" onclick="showFetchOtp()">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:14px;font-weight:700;">📡 Fetch All OTP</div>
+        <div style="font-size:11px;color:var(--sub);margin-top:2px;">FIND LOST CODES FOR ANY NUMBER</div>
+      </div>
+      <div style="color:var(--accent);font-size:20px;">›</div>
+    </div>
+  </div>
+
+  <div>
+    <div class="number-activity-header">
+      <div class="section-title" style="margin-bottom:0;">Number Activity</div>
+      <div style="display:flex;gap:8px;">
+        <button class="clear-btn" onclick="clearActivity()">CLEAR ALL</button>
+        <button class="clear-btn" style="border-color:var(--accent2);color:var(--accent2);" onclick="refreshActivity()">↻ REFRESH</button>
+      </div>
+    </div>
+    <div class="activity-tabs">
+      <div class="tab active" onclick="filterActivity('all',this)">ALL</div>
+      <div class="tab" onclick="filterActivity('success',this)">SUCCESS</div>
+      <div class="tab" onclick="filterActivity('pending',this)">PENDING</div>
+      <div class="tab" onclick="filterActivity('failed',this)">FAILED</div>
+    </div>
+    <div id="activityList">
+      <div class="empty-state">No history available.</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONSOLE -->
+<div class="page" id="page-console">
+  <div class="console-header">
+    <div class="section-title" style="margin-bottom:0;"><span class="live-dot"></span>Live Console</div>
+    <button class="refresh-btn" onclick="refreshConsole()">↻</button>
+  </div>
+
+  <!-- Console Tabs -->
+  <div class="activity-tabs" style="margin-bottom:12px;">
+    <div class="tab active" onclick="switchConsoleTab('all',this)" id="ctab-all">All OTPs</div>
+    <div class="tab" onclick="switchConsoleTab('stex',this)" id="ctab-stex">🔴 STEX Live</div>
+    <div class="tab" onclick="switchConsoleTab('voltx',this)" id="ctab-voltx">🔵 VOLTX</div>
+    <div class="tab" onclick="switchConsoleTab('nexa',this)" id="ctab-nexa">🟢 NEXA</div>
+  </div>
+
+  <div class="console-search">
+    <input class="search-input" id="consoleSearch" placeholder="Search range or message..." oninput="filterConsole()">
+  </div>
+
+  <!-- STEX Panel Info -->
+  <div id="stexInfoBar" style="display:none;background:linear-gradient(135deg,#ff4757,#c0392b);border-radius:12px;padding:12px 14px;margin-bottom:12px;color:#fff;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:13px;font-weight:700;">🔴 STEX Panel Console</div>
+        <div style="font-size:11px;opacity:0.7;margin-top:2px;">Live hits from api.2oo9.cloud/tness</div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-size:20px;font-weight:800;" id="stexHitCount">0</div>
+        <div style="font-size:10px;opacity:0.7;">hits (15min)</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="consoleList">
+    <div class="loading"><div class="spinner"></div></div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div class="page" id="page-orders">
+  <div class="section-title">📦 VPN Orders</div>
+  <div class="card">
+    <div class="empty-state">You haven't purchased any VPNs yet.</div>
+  </div>
+</div>
+
+<!-- WALLET -->
+<div class="page" id="page-wallet">
+  <div class="section-title">💳 Withdraw Wallet</div>
+
+  <div class="card">
+    <div class="input-group">
+      <label class="input-label">Select Method</label>
+      <select class="method-select" id="withdrawMethod">
+        <option value="">Select a method...</option>
+        <option value="bkash">bKash</option>
+        <option value="nagad">Nagad</option>
+        <option value="rocket">Rocket</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <label class="input-label">Payment Number</label>
+      <input class="input-field" id="withdrawNumber" placeholder="e.g. 017XXXXXXXX">
+    </div>
+    <div class="input-group">
+      <label class="input-label">Amount (৳) &nbsp;<span style="color:var(--accent);font-size:11px;">(MIN: ৳<span id="minWithdraw">30</span>)</span></label>
+      <div class="amount-row">
+        <div class="input-group">
+          <input class="input-field" id="withdrawAmount" type="number" placeholder="0.00">
+        </div>
+        <button class="use-max-btn" onclick="useMaxBalance()">USE MAX</button>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="submitWithdraw()">Submit Request</button>
+  </div>
+
+  <div>
+    <div class="section-title">Withdrawal History</div>
+    <div id="withdrawHistory">
+      <div class="empty-state">No previous requests.</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" id="page-profile">
+  <div class="card" style="text-align:center;padding:24px;">
+    <div class="profile-avatar" id="profileAvatar">?</div>
+    <div class="profile-name" id="profileName">Loading...</div>
+    <div class="profile-username" id="profileUsername">@...</div>
+    <div class="profile-uid">UID: <span id="profileUid">...</span></div>
+    <div class="profile-grid">
+      <div class="profile-stat">
+        <div class="profile-stat-val">Active</div>
+        <div class="profile-stat-lbl">Status</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">৳<span id="profileRate">0.15</span></div>
+        <div class="profile-stat-lbl">Rate Per OTP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Account Stats</div>
+    <div class="profile-grid">
+      <div class="profile-stat">
+        <div class="profile-stat-val" id="profileTotalOtp">0</div>
+        <div class="profile-stat-lbl">Total OTPs</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val" id="profileTodayOtp">0</div>
+        <div class="profile-stat-lbl">Today OTPs</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">৳<span id="profileBalance">0.00</span></div>
+        <div class="profile-stat-lbl">Balance</div>
+      </div>
+      <div class="profile-stat">
+        <div class="profile-stat-val">৳<span id="profileEarned">0.00</span></div>
+        <div class="profile-stat-lbl">Total Earned</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-item active" onclick="showPage('home',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+    Home
+  </button>
+  <button class="nav-item" onclick="showPage('number',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18"/></svg>
+    Number
+  </button>
+  <button class="nav-item" onclick="showPage('console',this);loadConsole()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4,17 10,11 4,5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+    Console
+  </button>
+  <button class="nav-item" onclick="showPage('orders',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+    Orders
+  </button>
+  <button class="nav-item" onclick="showPage('wallet',this);loadWithdrawHistory()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    Wallet
+  </button>
+  <button class="nav-item" onclick="showPage('profile',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    Profile
+  </button>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ── TELEGRAM MINI APP ──────────────────────────────────────────────────────────
+const tg = window.Telegram?.WebApp;
+if (tg) {
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor('#0077ff');
+}
+
+const BOT_API = 'https://api.telegram.org/bot' + (tg?.initDataUnsafe?.bot?.username || '');
+const USER = tg?.initDataUnsafe?.user || {};
+const USER_ID = USER.id || null;
+const BOT_USERNAME = 'Social_clone_bd_bot'; // ← your bot username
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let userData = {};
+let consoleData = [];
+let allActivity = [];
+let currentFilter = 'all';
+let isDark = false;
+
+// ── THEME ──────────────────────────────────────────────────────────────────────
+function toggleTheme() {
+  isDark = !isDark;
+  document.documentElement.setAttribute('data-theme', isDark ? 'dark' : '');
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
+}
+(function initTheme() {
+  const saved = localStorage.getItem('theme');
+  if (saved === 'dark' || (!saved && tg?.colorScheme === 'dark')) {
+    isDark = true;
+    document.documentElement.setAttribute('data-theme', 'dark');
+    document.getElementById('themeBtn').textContent = '☀️';
+  }
+})();
+
+// ── NAV ────────────────────────────────────────────────────────────────────────
+function showPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── BOT API CALL ───────────────────────────────────────────────────────────────
+// All data comes from the bot via sendMessage/WebApp.sendData
+// The Mini App sends requests to bot using Telegram.WebApp.sendData
+function sendToBot(action, data = {}) {
+  if (tg) {
+    tg.sendData(JSON.stringify({ action, ...data, user_id: USER_ID }));
+  }
+}
+
+// ── LOAD USER DATA ─────────────────────────────────────────────────────────────
+function loadUserData() {
+  // If running inside Telegram Mini App, get data from initDataUnsafe
+  if (USER_ID) {
+    // Request data from bot
+    const firstName = USER.first_name || 'User';
+    const lastName = USER.last_name || '';
+    const username = USER.username || '';
+
+    // Set profile UI immediately from Telegram data
+    document.getElementById('profileName').textContent = firstName + (lastName ? ' ' + lastName : '');
+    document.getElementById('profileUsername').textContent = username ? '@' + username : 'No username';
+    document.getElementById('profileUid').textContent = USER_ID;
+    document.getElementById('profileAvatar').textContent = (firstName[0] || 'U').toUpperCase();
+
+    // Refer link
+    const referUrl = `https://t.me/${BOT_USERNAME}?start=${USER_ID}`;
+    document.getElementById('referLink').textContent = referUrl;
+
+    // Fetch balance & stats from bot backend via postMessage
+    fetchUserStats();
+  } else {
+    // Demo mode — not inside Telegram
+    document.getElementById('profileName').textContent = 'Demo User';
+    document.getElementById('profileUsername').textContent = '@demo';
+    document.getElementById('profileUid').textContent = '123456789';
+    document.getElementById('profileAvatar').textContent = 'D';
+    document.getElementById('referLink').textContent = `https://t.me/${BOT_USERNAME}?start=123456789`;
+    setDemoData();
+  }
+}
+
+function setDemoData() {
+  updateBalanceUI(12.50);
+  document.getElementById('totalOtps').textContent = '42';
+  document.getElementById('todayOtps').textContent = '7';
+  document.getElementById('totalRefers').textContent = '3';
+  document.getElementById('totalEarned').textContent = '18.75';
+  document.getElementById('friendsJoined').textContent = '3';
+  document.getElementById('totalCommission').textContent = '6.25';
+  document.getElementById('profileTotalOtp').textContent = '42';
+  document.getElementById('profileTodayOtp').textContent = '7';
+  document.getElementById('profileBalance').textContent = '12.50';
+  document.getElementById('profileEarned').textContent = '18.75';
+  document.getElementById('profileRate').textContent = '0.15';
+}
+
+function fetchUserStats() {
+  // In production: bot sends data via Telegram.WebApp events
+  // Mini App listens for messages from bot
+  window.addEventListener('message', function(e) {
+    try {
+      const msg = JSON.parse(e.data);
+      if (msg.type === 'user_data') {
+        const d = msg.data;
+        updateBalanceUI(d.balance || 0);
+        document.getElementById('totalOtps').textContent = d.total_otps || 0;
+        document.getElementById('todayOtps').textContent = d.today_otps || 0;
+        document.getElementById('totalRefers').textContent = d.total_refers || 0;
+        document.getElementById('totalEarned').textContent = (d.total_earned || 0).toFixed(2);
+        document.getElementById('friendsJoined').textContent = d.total_refers || 0;
+        document.getElementById('totalCommission').textContent = (d.commission_earned || 0).toFixed(2);
+        document.getElementById('profileTotalOtp').textContent = d.total_otps || 0;
+        document.getElementById('profileTodayOtp').textContent = d.today_otps || 0;
+        document.getElementById('profileBalance').textContent = (d.balance || 0).toFixed(2);
+        document.getElementById('profileEarned').textContent = (d.total_earned || 0).toFixed(2);
+        document.getElementById('profileRate').textContent = (d.otp_rate || 0.15).toFixed(2);
+        document.getElementById('minWithdraw').textContent = d.min_withdraw || 30;
+        userData = d;
+      }
+      if (msg.type === 'console_data') {
+        consoleData = msg.data || [];
+        renderConsole(consoleData);
+      }
+      if (msg.type === 'activity_data') {
+        allActivity = msg.data || [];
+        renderActivity(allActivity);
+      }
+      if (msg.type === 'withdraw_history') {
+        renderWithdrawHistory(msg.data || []);
+      }
+      if (msg.type === "stex_console") {
+        const hits = msg.data || [];
+        document.getElementById("stexHitCount").textContent = hits.length;
+        stexData = hits.map(h => ({
+          service: h.sid || "Unknown", number: (h.range || "") + "XXX",
+          flag: "🌍", country: "", otp: extractOtp(h.message || ""),
+          time: h.time ? new Date(h.time).toLocaleTimeString() : new Date().toLocaleTimeString(),
+          message: h.message || "", source: "STEX"
+        }));
+        renderConsoleByTab();
+      }
+      if (msg.type === "stex_api_key") {
+        stexApiKey = msg.key || "";
+        if (currentConsoleTab === "stex" && stexApiKey) fetchStexDirect(stexApiKey);
+      }
+      if (msg.type === "voltx_console") {
+        voltxData = (msg.data || []).map(h => ({
+          service: h.sid || "Unknown", number: (h.range||"")+"XXX",
+          flag: "🌍", country: "", otp: extractOtp(h.message||""),
+          time: new Date().toLocaleTimeString(), message: h.message||"", source: "VOLTX"
+        }));
+        renderConsoleByTab();
+      }
+    } catch(e) {}
+  });
+
+  // Also request via Telegram WebApp data
+  if (tg) {
+    tg.onEvent('mainButtonClicked', () => {});
+  }
+
+  // Demo fallback after 500ms if no real data
+  setTimeout(() => {
+    if (!userData.balance && !USER_ID) setDemoData();
+  }, 500);
+}
+
+function updateBalanceUI(bal) {
+  const formatted = parseFloat(bal).toFixed(2);
+  document.getElementById('homeBalance').textContent = formatted;
+  document.getElementById('topBalanceVal').textContent = formatted;
+}
+
+// ── NUMBER PAGE ────────────────────────────────────────────────────────────────
+function findRange() {
+  const q = document.getElementById('findServiceInput').value.trim();
+  if (!q) { showToast('Enter a service name'); return; }
+  document.getElementById('findRangeResult').textContent = '🔍 Searching...';
+  sendToBot('find_range', { query: q });
+  setTimeout(() => {
+    document.getElementById('findRangeResult').textContent = '📨 Request sent to bot. Check your inbox!';
+  }, 800);
+}
+
+function allocateNumber() {
+  const range = document.getElementById('rangeInput').value.trim();
+  if (!range) { showToast('Enter a range number'); return; }
+  sendToBot('allocate_number', { range });
+  showToast('📨 Request sent! Check bot inbox.');
+}
+
+function showFetchOtp() {
+  sendToBot('fetch_all_otp');
+  showToast('📨 Fetching OTPs... Check bot inbox.');
+}
+
+function filterActivity(type, el) {
+  currentFilter = type;
+  document.querySelectorAll('.activity-tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderActivity(allActivity);
+}
+
+function renderActivity(data) {
+  const list = document.getElementById('activityList');
+  const filtered = currentFilter === 'all' ? data : data.filter(i => i.status === currentFilter);
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state">No history available.</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(item => `
+    <div class="otp-item">
+      <div class="otp-header">
+        <span class="otp-service">${item.service || 'IG'} :: ${item.number || '224655XXX'}</span>
+        <span class="otp-time">${item.time || ''}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+        <span style="font-size:13px;">${item.flag || '🌍'}</span>
+        <span class="otp-number">${item.country || 'Unknown'}</span>
+      </div>
+      <div class="otp-code">${item.otp || '------'}</div>
+      ${item.message ? `<div class="otp-msg">→ ${item.message.substring(0,80)}...</div>` : ''}
+      <div class="otp-actions">
+        <button class="otp-btn otp-btn-copy" onclick="copyText('${item.otp}')">COPY</button>
+        <button class="otp-btn otp-btn-use" onclick="showToast('Opening bot...')">USE</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function clearActivity() {
+  allActivity = [];
+  renderActivity([]);
+  showToast('Activity cleared');
+}
+
+function refreshActivity() {
+  sendToBot('get_activity');
+  showToast('Refreshing...');
+}
+
+// ── CONSOLE ────────────────────────────────────────────────────────────────────
+let currentConsoleTab = "all";
+let stexData = [];
+let voltxData = [];
+let nexaData = [];
+let stexApiKey = "";
+let stexAutoRefresh = null;
+
+function switchConsoleTab(tab, el) {
+  currentConsoleTab = tab;
+  document.querySelectorAll(".activity-tabs .tab").forEach(t => t.classList.remove("active"));
+  el.classList.add("active");
+  document.getElementById("stexInfoBar").style.display = tab === "stex" ? "block" : "none";
+  if (tab === "stex") {
+    loadStexConsole();
+    if (stexAutoRefresh) clearInterval(stexAutoRefresh);
+    stexAutoRefresh = setInterval(loadStexConsole, 5000);
+  } else {
+    if (stexAutoRefresh) { clearInterval(stexAutoRefresh); stexAutoRefresh = null; }
+    renderConsoleByTab();
+  }
+}
+
+function extractOtp(msg) {
+  const m = msg.match(/\b(\d{4,8})\b/);
+  return m ? m[1] : "------";
+}
+
+async function fetchStexDirect(apiKey) {
+  try {
+    const res = await fetch("https://api.2oo9.cloud/MXS47FLFX0U/tness/@public/api/console", {
+      headers: { "mauthapi": apiKey }
+    });
+    if (!res.ok) { document.getElementById("consoleList").innerHTML = '<div class="empty-state">⚠️ STEX API error: ' + res.status + '</div>'; return; }
+    const data = await res.json();
+    const hits = data?.data?.hits || [];
+    document.getElementById("stexHitCount").textContent = hits.length;
+    stexData = hits.map(h => ({
+      service: h.sid || "Unknown",
+      number: (h.range || "") + "XXX",
+      flag: "🌍", country: "",
+      otp: extractOtp(h.message || ""),
+      time: h.time ? new Date(h.time).toLocaleTimeString() : new Date().toLocaleTimeString(),
+      message: h.message || "", source: "STEX"
+    }));
+    renderConsoleByTab();
+  } catch(e) {
+    document.getElementById("consoleList").innerHTML = '<div class="empty-state">⚠️ Cannot connect to STEX API directly.<br>Set your API key in bot settings.</div>';
+  }
+}
+
+function loadStexConsole() {
+  sendToBot("get_stex_console");
+  if (stexApiKey) fetchStexDirect(stexApiKey);
+  else document.getElementById("consoleList").innerHTML = '<div class="empty-state">🔑 No STEX API key set.<br>Add key in Admin → STEX Control.</div>';
+}
+
+function renderConsoleByTab() {
+  let data;
+  if (currentConsoleTab === "stex") data = stexData;
+  else if (currentConsoleTab === "voltx") data = voltxData;
+  else if (currentConsoleTab === "nexa") data = nexaData;
+  else data = [...stexData, ...voltxData, ...nexaData, ...consoleData];
+  renderConsole(data.length ? data : (currentConsoleTab === "all" ? consoleData : []));
+}
+
+function loadConsole() {
+  document.getElementById("consoleList").innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  sendToBot("get_console");
+  setTimeout(() => {
+    if (!consoleData.length) { consoleData = generateDemoConsole(); renderConsoleByTab(); }
+  }, 1000);
+}
+
+function refreshConsole() {
+  document.getElementById("consoleList").innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+  if (currentConsoleTab === "stex") {
+    if (stexApiKey) fetchStexDirect(stexApiKey);
+    else loadStexConsole();
+  } else {
+    sendToBot("get_console");
+    setTimeout(() => { consoleData = generateDemoConsole(); renderConsoleByTab(); }, 800);
+  }
+}
+
+
+function generateDemoConsole() {
+  const services = ['IG','WA','FB','TK','TW'];
+  const countries = [['🇬🇳','224655XXX','Guinea'],['🇨🇫','236463XXX','CAR'],['🇨🇮','225078XXX','Ivory Coast']];
+  return Array.from({length:12}, (_, i) => {
+    const s = services[i % services.length];
+    const c = countries[i % countries.length];
+    const now = new Date(Date.now() - i * 30000);
+    return { service:s, number:c[1], flag:c[0], country:c[2], otp:String(Math.floor(100000+Math.random()*900000)), time:now.toLocaleTimeString(), message:`<#> ${Math.floor(100000+Math.random()*900000)} is your Instagram code.` };
+  });
+}
+
+function renderConsole(data) {
+  const q = document.getElementById('consoleSearch')?.value?.toLowerCase() || '';
+  const filtered = q ? data.filter(i => (i.number+i.message+i.otp+i.service).toLowerCase().includes(q)) : data;
+  const el = document.getElementById('consoleList');
+  if (!filtered.length) {
+    el.innerHTML = '<div class="empty-state">No OTPs found.</div>';
+    return;
+  }
+  el.innerHTML = filtered.map(item => `
+    <div class="otp-item">
+      <div class="otp-header">
+        <span class="otp-service">${item.service} :: ${item.number}</span>
+        <span class="otp-time">${item.time}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px;">
+        <span>${item.flag}</span>
+        <span style="font-size:12px;color:var(--sub);">${item.country}</span>
+      </div>
+      <div class="otp-actions">
+        <button class="otp-btn otp-btn-copy" onclick="copyText('${item.otp}')">COPY ${item.otp}</button>
+        <button class="otp-btn otp-btn-use" onclick="showToast('Sent to bot!')">USE</button>
+      </div>
+      <div class="otp-msg" style="margin-top:6px;">→ ${(item.message||'').substring(0,100)}</div>
+    </div>
+  `).join('');
+}
+
+function filterConsole() {
+  renderConsole(consoleData);
+}
+
+// ── WALLET ─────────────────────────────────────────────────────────────────────
+function useMaxBalance() {
+  const bal = parseFloat(document.getElementById('homeBalance').textContent) || 0;
+  document.getElementById('withdrawAmount').value = bal.toFixed(2);
+}
+
+function submitWithdraw() {
+  const method = document.getElementById('withdrawMethod').value;
+  const number = document.getElementById('withdrawNumber').value.trim();
+  const amount = parseFloat(document.getElementById('withdrawAmount').value);
+  const minW = parseFloat(document.getElementById('minWithdraw').textContent) || 30;
+
+  if (!method) { showToast('Select a payment method'); return; }
+  if (!number) { showToast('Enter payment number'); return; }
+  if (!amount || amount < minW) { showToast(`Minimum withdrawal: ৳${minW}`); return; }
+
+  sendToBot('withdraw', { method, number, amount });
+  showToast('✅ Request sent to bot!');
+  document.getElementById('withdrawAmount').value = '';
+  document.getElementById('withdrawNumber').value = '';
+  document.getElementById('withdrawMethod').value = '';
+}
+
+function loadWithdrawHistory() {
+  sendToBot('get_withdraw_history');
+}
+
+function renderWithdrawHistory(data) {
+  const el = document.getElementById('withdrawHistory');
+  if (!data.length) {
+    el.innerHTML = '<div class="empty-state">No previous requests.</div>';
+    return;
+  }
+  el.innerHTML = data.map(w => `
+    <div class="withdraw-history-item">
+      <div class="wh-left">
+        <div class="wh-method">${w.method}</div>
+        <div class="wh-date">${w.date || ''}</div>
+      </div>
+      <div class="wh-right">
+        <div class="wh-amount" style="color:var(--accent);">৳${w.amount}</div>
+        <div class="wh-status status-${w.status}">${w.status}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── REFER ──────────────────────────────────────────────────────────────────────
+function copyRefer() {
+  const link = document.getElementById('referLink').textContent;
+  copyText(link);
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text).then(() => showToast('✅ Copied!')).catch(() => {
+    const el = document.createElement('textarea');
+    el.value = text;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    showToast('✅ Copied!');
+  });
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+loadUserData();
+</script>
+</body>
+</html>
