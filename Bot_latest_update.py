@@ -58,12 +58,12 @@ load_dotenv()
 # ==========================================
 # Configuration (Token & Owner ID)
 # ========================================
-TOKEN = "8918847323:AAGBaDgOrk0n3hq0QB99yDHU2Z8H3qjEZLg"       #YOUR BOT TOKEN HERE
+TOKEN = "8663307697:AAGS0wD9_bCWs470RfYBC09hD1VMrrKES6I"       #YOUR BOT TOKEN HERE
 BASE_URL = f"https://api.telegram.org/bot{TOKEN}"
 FILE_URL = f"https://api.telegram.org/file/bot{TOKEN}/"
 
 OWNER_ID = 8709830500
-BOT_USERNAME = "@Social_clone_bd_bot"
+BOT_USERNAME = "@Fast_Otpservice_Bot"
 WEB_APP_URL = ""  # 🌟 Set your Mini App URL here after hosting (e.g. https://yoursite.com/miniapp.html)
 DB_FILE = "bot_data.json"
 
@@ -145,15 +145,15 @@ DEFAULT_CUSTOM_MESSAGES = {
 firebase_credentials_json = r"""
 {
   "type": "service_account",
-  "project_id": "socialclonebot",
-  "private_key_id": "183803bdc32fa23414811764fe4e9f5d0999d1b6",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEugIBADANBgkqhkiG9w0BAQEFAASCBKQwggSgAgEAAoIBAQCfsxJtIyDo6vFJ\nzHKckgKasPRZ+fIq4byc/t0J5thiADOe63XnWwDBnn1/hYuYPG8OgTt6RmROrBPf\nEUPZ+ETG4Zduqaefe3pgqb5U0Zi98qrBOdKHoYYokhVGTedVa0kL0ouAVutWQSO/\npmB7mcaK66dsNy4+YnLmVq6Q1cxQjRzThrb+of4kMlnBJszkN5dzmfKRL8mm5edJ\n0sPw+RqzdxogEnHMzGFeEW6/KypuG+gs0heJt8J606buekR7MRyKc8FOdvSkyhiT\n8NylBLKL/32ecL9Zv+CjkXRBgPdItIsTm/bIKvbWHO0Yy+jLHH5LsIkpN7mUDhag\nH/p9ZYOhAgMBAAECggEAAQwwbdavZ6pqOKD2oS15sWXsRcPUkXCc0g3U9DSXYksx\n4NQWwv9Z6as+aQNUAgS8I2+jF39V4fM8h80p8V3be6TYCgyNsjI3QGI/V/iZBH6j\n8p5hvGyJlVi3UC2re71iA7RsSwRRnmWmfvfFMG0MPEs6nwSHUTby8y0J5PQrbIgs\ndWXvEVnGel2asf11Ued7nAEtXxbqSIyknSkSBPl2NxsJzfd5BOUYigUipsCPhzaU\ntm5MWJHbeymJxFg5oX5LjkZmWYRrRF5/A9msex2eOcBJ/LJFGudazB+Xu3DEuPkM\npIpY9Wb7LqYwVlriFeXhruaM68mS3KumPGbWWA7RHQKBgQDTIepQaWC4vwsSBQlB\nO0nVWzJG970LJanj/lo7ebu0RqWiLqEI7BSgdadJfyRjtqai8T97wm7aaULdm+09\nz03LcfdPI95mh9/0SynJD0t5zMBKPQ9Vf45zr8aQf0SNiWVUouEQ3uWbBoSJb1wE\noZ/6SfyUoG0cvAE6VxNjNg2HdQKBgQDBoxYLaCSK7k8wjgY8saF7JLB9cOKeRYiI\nM0tegir6Aqyz1X1T0VDtJrw3rV3LkLzR53T32zYFFfhweDf9EESL9IlfaLYotmM9\nIxnyUIqFyegrspuKM6LKmiQyMP3w7EEAZesU50W0joSyiOcRslBadDDPqZhBsRcW\nta2EiMxx/QKBgHvuS4D56hlnopLoO997csJ3LpLztpbFe+zlj4eb1C9kzLLfVg1L\nrmvlw9VjeTPCshuxKod1wOYZpXM5pM+EUPDbq8RblJ9woGfget2XScFsC29IWijg\nn/iONCr7WX0PKli85wmlHPebos6dfFEHokUjisyfQoz8WmgpVqsEvnpFAoGARH/8\n/GwLAVrsiLC1ZCMyjO2dwcJ9aKAQfJ4ou3Yw3eC0V6nefBhAGKTrUIbz919sbJUE\nu+nAYmwzRxZAODXZCemn7yiLyDs9QBN6yk3TsyCKEWtNusYpgKKmy1qpeuEY3Zsw\nXmSyM/120/G6THhYFKel3NCSHCsZj98VUx1RtcECf0FGa928NZI27DySaEIjppXj\nmZeQ/PBIh18egzVaEZlhuL06MNKw/GEZvu/XyWhiRq2oSLN2qLwwfqjB82nkOhiO\nP7YUgfAG0tH1W9DXFAjO3nGga48L4oxaHXwoUZvxPtAeltmxyEOiq0qi82cV7xSw\nWXAJCZMwhELeBvCdTIw=\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-fbsvc@socialclonebot.iam.gserviceaccount.com",
-  "client_id": "117728328948562672797",
+  "project_id": "test-390b5",
+  "private_key_id": "63831876952c9a68e73f77f17a6575b7cff9a243",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDEC7LZFemNio6f\nu57XmaAZiMJSEWl9oOyDKRspuYABkB5tPK74o1BsTQWJ8AaER/z3CZzPYQbk7nLC\nX5GqJZQkWErE/x/onlSKWqyw99gmxxsQAFCOkZbinPJyeaivmV9QwVYpC4ayf7D2\ne1MmcfNjb3etmeqB1U0BoDUgYTA0m1f5X6HCYEE8oJEj3c1/6JwUooZF3biIULrK\nAMAxOzr5+tI6xbvfH2/6kqqwNJs8d5T2guDrpWVDMPatX22guRwC1twsd9Kn4P2Q\nhIos6MLWR6V+UWyy1kJbBbA0TSNKFccXs0eqw79jMoyzMBc3w89HWk9xAuxL7KgE\nabeEXjS1AgMBAAECggEAAL5VhgiDbD0WdzOGaQ4vL/sOy8k+7+Z84gvprkcCuueD\nvsDbQQUNie/412fOiigSR+QbziKgP4WnQWaMefcUVmKV4aSmx5nK2KZjYl2FiOGR\nhIYzDdR0P09nP57NZ7LmHdKmnHSC6s8cb8oj8a3tURnzTVVtAm85kHK90krjVqQX\n7lzNbTIf4kdtWbMmxKcadswlgIMRpXM6XHdNORSIRw/4kIQrjIE6byV4XQn2h1yH\nJjX3k+lOXDeEGaT+PiH5c5N+/FQUP4/iBa03K3WIdKufc7dxIl2B+JlQ0nlbzmjm\nB5Ip1OBYEE3MFyE1hymi9M1CO5grYvpNsGeDuIl++QKBgQDukJdhVYea/p8SvdNW\n7Xt0r2OkG7AaywTECCP+x1w1Rcz/eKyRMQ7daU9dOAQgZGdb+NAN9hKfiz51lB4K\n40ZcPn/ilwUo3Bwen17crohwTiD7vrhiiGULPdtqkfwaA+XPZ9pEq9H5GBijNoCq\ntQWC2NtOFDcpThvKmdWBtSIFgwKBgQDSX5l2vFZR7dBvkSiBoqn9jIFuUIrmzXAd\nRpxHqxs8bhId6frC/Er4bodpmQAMHQO2E5VEAlVxME2Q8e0K3666zIpFPCV5qYzu\nMKsUXCF8pUjOwmwnlCa1mX+zx2W4zHvr94+nqP5KNtT288MotcrpGdC2suanl4Kl\n0RZsEKZ/ZwKBgCq9MrGYXhPxe9Qit+MB5rUv2r0CzNjv+Cmaf8BcPPO6TpCSMPBO\nBqi5/iLoLy0Sb8X1XGiz5gA5NPZhk8RFlUxfUg/pGF6KmGsQCDGm/wCHrrcLIwNc\nBiYubcm4355Vhm1S4LKeyZ5Dp95NnF140sTvTtK9Imi++pGgX7S+G5s7AoGAWl4m\nlhKhIeB+QO6h783oJ7pLfw+qGyr0lh7W0xJ1SKgfsCnqRggKTF1uXbYThyCPj48p\n92TpPw34w+KoaJtde3CRlNwZXQGwQEE3vC83U0vM0sRBoV7KogemC5wD3jY4pUxa\nsTKuyUJ0iQB9POeamjc0qMaAvk0fGguPDiy42NECgYBjlceLhiw6FTKOn5jjLal6\nfsxIpvnxy/Bh9dpjVWWwnJ8r3Z5yWYT8g/PTVBHLlkq2zlpsGD/MnulJud9wprLe\n5UVcFmfo69Mmj50hkVqyBS0B+bfcLBRS2WBCcoASCy/80AYXCqM1FUE25Ckwn8kv\nZ0odGZZ6e9zgXubJJ45CMw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-fbsvc@test-390b5.iam.gserviceaccount.com",
+  "client_id": "101826010793472532014",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
   "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40socialclonebot.iam.gserviceaccount.com",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40test-390b5.iam.gserviceaccount.com",
   "universe_domain": "googleapis.com"
 }"""
 
